@@ -37,7 +37,8 @@ class Phae(object):
         try:
             urls = user_json["urls"]
             name = user_json["name"]
-            return (urls, name)
+            google_id = user_json["id"]
+            return (urls, name, google_id)
         except:
             raise ValueError("User has no URLs")
             
@@ -148,16 +149,14 @@ class Phae(object):
             
         googleplus_author_url = self.profiles_to_plus_url(author_url)
         google_plus_user = self.googleplus_username_fromurl(googleplus_author_url)
-        (urls_google, name) = self.import_urls_from_google(google_plus_user)
+        (urls_google, name, google_id) = self.import_urls_from_google(google_plus_user)
         
         # Check that the domain from starting_url is in the G+ user's urls
         set_domains = self.google_urls_to_domains(urls_google)
         tld_info = tldextract.extract(starting_url)
         domain = tld_info.domain + "." + tld_info.suffix
-        print domain
-        print set_domains
         if domain in set_domains:
-            return {"first_name": name['givenName'], "family_name" : name['familyName'], "google_plus_profile" : "https://plus.google.com/"+str(google_plus_user)}
+            return {"first_name": name['givenName'], "family_name" : name['familyName'], "google_plus_profile" : "https://plus.google.com/"+str(google_plus_user), "id":google_id}
             
         else: 
             raise BaseException("An author link was found. It led to Google plus. But the domain is not linked from Google+.")
