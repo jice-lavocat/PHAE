@@ -1,7 +1,7 @@
+# -*- coding: utf-8 -*-
 import settings
 import requests
 import json
-#from urlparse import urlparse
 import urlparse 
 import lxml.html
 
@@ -112,7 +112,7 @@ class Phae(object):
             raise BaseException("The url does not seem to come from a valid G+ user profile")
             
             
-    def main(self, starting_url, raw_html=None, follow_links=True):
+    def get_author(self, starting_url, raw_html=None, follow_links=True):
         """
         Performs the lookup for author tag and follows the pages recursively 
         until it finds a Google profile.
@@ -143,4 +143,3 @@ class Phae(object):
             
         else: 
             raise BaseException("An author link was found. It led to Google plus. But the domain is not linked from Google+.")
-        
