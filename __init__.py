@@ -29,7 +29,8 @@ class Phae(object):
         # Does the user have some urls in his/her profile
         try:
             urls = user_json["urls"]
-            return urls
+            name = user_json["name"]
+            return (urls, name)
         except:
             raise ValueError("User has no URLs")
             
@@ -45,13 +46,6 @@ class Phae(object):
             domain = '{uri.scheme}://{uri.netloc}'.format(uri=parsed_uri)
             domain_list.append(domain)
         return set(domain_list)
-        
-    def extract_schema_author(self, html_tree):
-        """
-        Returns author url contained in itemprop author
-         <span itemprop=author><a title="Jean-Christophe Lavocat" href="/news/contributeurs/jice-lavocat" rel = "author">Jean-Christophe Lavocat</a></span>
-        """
-        return True
         
         
     def extract_relauthor_url(self, url_requested_page, raw_html = None):
@@ -92,3 +86,61 @@ class Phae(object):
             else:
                 visited_urls += [new_url]
                 return self.find_google_profile(visited_urls)
+                
+    def profiles_to_plus_url(self, url):
+        """
+        Gives the google plus URL from the Google profiles page
+        """
+        if ("plus.google.com" in url):
+            return url
+        else:
+            r = requests.get(url)
+            redirected_url = r.url
+            return redirected_url
+            
+    def googleplus_username_fromurl(self, url):
+        """
+        Returns a username out of a G+ url
+        """
+        parsed_url = urlparse.urlparse(url)
+        username = parsed_url.path.split("/")[1]
+        if username[0] == "+":
+            return username
+        elif username.isdigit():
+            return username
+        else: 
+            raise BaseException("The url does not seem to come from a valid G+ user profile")
+            
+            
+    def main(self, starting_url, raw_html=None, follow_links=True):
+        """
+        Performs the lookup for author tag and follows the pages recursively 
+        until it finds a Google profile.
+        Returns the name of author if found on Google
+        """
+        if raw_html:
+            first_author_url = self.extract_relauthor_url(starting_url, raw_html)
+            if follow_links:
+                author_url = self.find_google_profile([first_author_url])
+            else:
+                if (("plus.google.com" in first_author_url) or ("profiles.google.com" in first_author_url)) :
+                    author_url = self.profiles_to_plus_url((first_author_url))
+                else:
+                    raise BaseException("There is a link to an author profile, but it's not a Google+ profile")
+        else:
+            author_url = self.find_google_profile([starting_url])
+            
+        googleplus_author_url = self.profiles_to_plus_url(author_url)
+        google_plus_user = self.googleplus_username_fromurl(googleplus_author_url)
+        (urls_google, name) = self.import_urls_from_google(google_plus_user)
+        
+        # Check that the domain from starting_url is in the G+ user's urls
+        set_domains = self.google_urls_to_domains(urls_google)
+        parsed_uri = urlparse.urlparse(starting_url)
+        domain = '{uri.scheme}://{uri.netloc}'.format(uri=parsed_uri)
+        if domain in set_domains:
+            return {"first_name": name['givenName'], "family_name" : name['familyName'], "google_plus_profile" : "http://plus.google.com/"+str(google_plus_user)}
+            
+        else: 
+            raise BaseException("An author link was found. It led to Google plus. But the domain is not linked from Google+.")
+        
