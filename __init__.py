@@ -10,6 +10,7 @@ import requests
 import json
 import urlparse 
 import lxml.html
+import tldextract
 
 class Phae(object):
     """
@@ -48,8 +49,8 @@ class Phae(object):
         domain_list = []
         for url_info in urls:
             url = url_info["value"]
-            parsed_uri = urlparse.urlparse(url)
-            domain = '{uri.scheme}://{uri.netloc}'.format(uri=parsed_uri)
+            tld_info = tldextract.extract(url)
+            domain = tld_info.domain + "." + tld_info.suffix
             domain_list.append(domain)
         return set(domain_list)
         
@@ -151,8 +152,10 @@ class Phae(object):
         
         # Check that the domain from starting_url is in the G+ user's urls
         set_domains = self.google_urls_to_domains(urls_google)
-        parsed_uri = urlparse.urlparse(starting_url)
-        domain = '{uri.scheme}://{uri.netloc}'.format(uri=parsed_uri)
+        tld_info = tldextract.extract(starting_url)
+        domain = tld_info.domain + "." + tld_info.suffix
+        print domain
+        print set_domains
         if domain in set_domains:
             return {"first_name": name['givenName'], "family_name" : name['familyName'], "google_plus_profile" : "https://plus.google.com/"+str(google_plus_user)}
             
