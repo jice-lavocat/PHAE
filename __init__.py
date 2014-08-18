@@ -66,7 +66,8 @@ class Phae(object):
             
         # Now that we have the html tree, we look for variations of author tag
         # In order rel="author" then rel="me"
-        list_author_urls = raw_html_tree.xpath("//a[@rel='me']/@href | //a[@rel='author']/@href ")
+        xpath_term = "//a[@rel='me']/@href | //a[@rel='author']/@href | //link[@rel='me']/@href | //link[@rel='author']/@href"
+        list_author_urls = raw_html_tree.xpath(xpath_term)
         # We then select only the first link found
         if len(list_author_urls)>0:
             first_author_url_rel = list_author_urls[0]
