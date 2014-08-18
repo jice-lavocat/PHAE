@@ -66,8 +66,7 @@ class Phae(object):
             
         # Now that we have the html tree, we look for variations of author tag
         # In order rel="author" then rel="me"
-        list_author_urls = raw_html_tree.xpath('//a[@rel="author"]/@href')
-        list_author_urls += raw_html_tree.xpath("//a[@rel='me']/@href")
+        list_author_urls = raw_html_tree.xpath("//a[@rel='me']/@href | //a[@rel='author']/@href ")
         # We then select only the first link found
         if len(list_author_urls)>0:
             first_author_url_rel = list_author_urls[0]
@@ -107,9 +106,16 @@ class Phae(object):
     def googleplus_username_fromurl(self, url):
         """
         Returns a username out of a G+ url
+        Two syntaxes are in use :
+        https://plus.google.com/u/0/+Jice_Lavocat/whatever_extra_path
+        https://plus.google.com/+Jice_Lavocat/whatever_extra_path
         """
         parsed_url = urlparse.urlparse(url)
-        username = parsed_url.path.split("/")[1]
+        path = parsed_url.path
+        if "/u/0" in path:
+            username = path[4:].split("/")[1]
+        else:
+            username = path.split("/")[1]
         if username[0] == "+":
             return username
         elif username.isdigit():
@@ -149,5 +155,3 @@ class Phae(object):
             
         else: 
             raise BaseException("An author link was found. It led to Google plus. But the domain is not linked from Google+.")
-        
-

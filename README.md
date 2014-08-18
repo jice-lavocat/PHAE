@@ -20,14 +20,13 @@ Tutorial
 At the moment, we do not provide an installation package. To install Phae, just git clone this repository.
 :
 
-    `git clone git@github.com:tanzaho/PHAE.git`
+    git clone git@github.com:tanzaho/PHAE.git
     
 The script needs a public Google API token to access author information. Get one at the [Google API Console](https://console.developers.google.com/). You can then either place this token in the `settings.py` file or 
 use it as a parameter when calling the script.
 
 To get the authorship information from a given url :
     
-    ```
     from phae import phae
     
     # Either use the token from `settings.py` or use it as an (optional) parameter
@@ -44,7 +43,7 @@ To get the authorship information from a given url :
         print author['google_plus_profile']
     except:
         print "No correct author found"
-    ```
+
 
 
 Todo
