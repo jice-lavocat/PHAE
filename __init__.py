@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+
+__version__ = '0.0.1-dev'
+__license__ = 'GPL2'
+__author__ = 'Jean-Christophe Lavocat'
+
+
 import settings
 import requests
 import json
@@ -143,3 +149,5 @@ class Phae(object):
             
         else: 
             raise BaseException("An author link was found. It led to Google plus. But the domain is not linked from Google+.")
+        
+
