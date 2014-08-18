@@ -152,7 +152,7 @@ class Phae(object):
         parsed_uri = urlparse.urlparse(starting_url)
         domain = '{uri.scheme}://{uri.netloc}'.format(uri=parsed_uri)
         if domain in set_domains:
-            return {"first_name": name['givenName'], "family_name" : name['familyName'], "google_plus_profile" : "http://plus.google.com/"+str(google_plus_user)}
+            return {"first_name": name['givenName'], "family_name" : name['familyName'], "google_plus_profile" : "https://plus.google.com/"+str(google_plus_user)}
             
         else: 
             raise BaseException("An author link was found. It led to Google plus. But the domain is not linked from Google+.")
