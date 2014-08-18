@@ -17,7 +17,7 @@ class Phae(object):
     Phae() will retrieve and/or analyze html pages to extract relevant author information
     """
     def __init__(self, google_token=None):
-        self.google_token = google_token or settings['GOOGLE_API_TOKEN']
+        self.google_token = google_token or settings.GOOGLE_API_TOKEN
         
         
     def import_urls_from_google(self,user_id):
