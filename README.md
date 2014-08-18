@@ -27,7 +27,7 @@ use it as a parameter when calling the script.
 
 To get the authorship information from a given url :
     
-    from phae import phae
+    from PHAE import phae
     
     # Either use the token from `settings.py` or use it as an (optional) parameter
     g_token = "your_token_123456789"
