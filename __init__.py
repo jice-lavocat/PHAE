@@ -115,6 +115,7 @@ class Phae(object):
         Two syntaxes are in use :
         https://plus.google.com/u/0/+Jice_Lavocat/whatever_extra_path
         https://plus.google.com/+Jice_Lavocat/whatever_extra_path
+        will give +Jice_Lavocat
         """
         parsed_url = urlparse.urlparse(url)
         path = parsed_url.path
@@ -151,7 +152,7 @@ class Phae(object):
         googleplus_author_url = self.profiles_to_plus_url(author_url)
         google_plus_user = self.googleplus_username_fromurl(googleplus_author_url)
         (urls_google, name, google_id, google_url) = self.import_user_from_google(google_plus_user)
-        
+
         # Check that the domain from starting_url is in the G+ user's urls
         set_domains = self.google_urls_to_domains(urls_google)
         tld_info = tldextract.extract(starting_url)
