@@ -69,9 +69,12 @@ class Phae(object):
             
         # Now that we have the html tree, we look for variations of author tag
         # In order rel="author" then rel="me"
+        # Links such as <a href>
         xpath_term = "//a[@rel='me']/@href | //a[@rel='author']/@href"
+        # Links such as <link>
         xpath_term += " | //link[@rel='me']/@href | //link[@rel='author']/@href"
-        xpath_term += " | //a[contains(@href,'author')]/@href"
+        # Link such as http://www.google.com/u/15448?rel=author
+        xpath_term += " | //a[contains(@href,'?rel=author')]/@href"
         list_author_urls = raw_html_tree.xpath(xpath_term)
         # We then select only the first link found
         if len(list_author_urls)>0:
